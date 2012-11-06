@@ -58,4 +58,4 @@ people.php - /relaxo/people/ - Read Only
 contacts.php - /relaxo/contacts/ - Read/Write
 ```
 
-To test PUT, POST and DELETE requests you can use my RESTester tool (link to come).
+To test PUT, POST and DELETE requests you can use my REST test tool (link to come).
