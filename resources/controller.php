@@ -35,16 +35,29 @@ class Controller
     
     public function recordById($id)
     {
-        $findCommand = $this->db->fm->newFindCommand($this->db->layout);
-        $findCommand->addFindCriterion($this->db->id, $id);
-        $result = $findCommand->execute();
-        
-        if (FileMaker::isError($result)) {
-            echo 'Error: ' . $result->getMessage();
-            exit;
+        if ($this->db->id == '') {
+            $result = $this->db->fm->getRecordById($this->db->layout, $id);
+            
+            if (FileMaker::isError($result)) {
+                echo 'Error: ' . $result->getMessage();
+                exit;
+            }
+            
+            return $result;
+        } else {
+            $findCommand = $this->db->fm->newFindCommand($this->db->layout);
+            $findCommand->addFindCriterion($this->db->id, $id);
+            $result = $findCommand->execute();
+            
+            if (FileMaker::isError($result)) {
+                echo 'Error: ' . $result->getMessage();
+                exit;
+            }
+            
+            $records = $result->getRecords();
+       
+            return $records[0];
         }
-        
-        return $result->getRecords();
     }
     
     public function get($request)
@@ -58,7 +71,7 @@ class Controller
         $out = array();
         
         foreach($this->db->fields as $field) {
-            $out[$field] = $record[0]->getField($field);
+            $out[$field] = $record->getField($field);
         }
         
         return $out;
@@ -74,7 +87,7 @@ class Controller
             $count = 0;
             foreach ($request->params as $field => $value) {
                 if (in_array($field, $this->db->fields)) {
-                    $record[0]->setField($field, $value);
+                    $record->setField($field, $value);
                     $count += 1;
                 }
             }
@@ -99,7 +112,7 @@ class Controller
     {
         $recid = $request->url_elements[1];
         $record = $this->recordById($recid);
-        $result = $record[0]->delete();
+        $result = $record->delete();
         
         if (FileMaker::isError($result)) {
             echo 'Error: ' . $result->getMessage();

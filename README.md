@@ -35,7 +35,7 @@ $password = 'web';
 // The FileMaker layout configured for PHP
 $layout = 'Web';
 
-// The name of the unique identifier field from this database
+// The name of the unique identifier field from this database - leave blank to use FileMaker's recordId
 $id = 'ContactID';
 ```
 
